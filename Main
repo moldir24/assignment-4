@@ -1,0 +1,31 @@
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        DatabaseSetup.setupDatabase();
+        Scanner scanner = new Scanner(System.in);
+        StudentDAO studentDAO = new StudentDAO();
+        TeacherDAO teacherDAO = new TeacherDAO();
+
+        while (true) {
+            System.out.println("\nSchool Management System:");
+            System.out.println("1. Add Student");
+            System.out.println("2. Add Teacher");
+            System.out.println("3. Exit");
+            System.out.print("Choose an option: ");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (choice) {
+                case 1 -> studentDAO.createStudent(scanner);
+                case 2 -> teacherDAO.createTeacher(scanner);
+                case 3 -> {
+                    System.out.println("Exiting... Goodbye!");
+                    return;
+                }
+                default -> System.out.println("Invalid option. Please try again.");
+            }
+        }
+    }
+}
