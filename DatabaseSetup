@@ -1,0 +1,33 @@
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.SQLException;
+
+public class DatabaseSetup {
+    public static void setupDatabase() {
+        String createStudentsTable = """
+            CREATE TABLE IF NOT EXISTS Students (
+                id SERIAL PRIMARY KEY,
+                name VARCHAR(100) NOT NULL,
+                age INT NOT NULL,
+                grade VARCHAR(10) NOT NULL
+            );
+        """;
+
+        String createTeachersTable = """
+            CREATE TABLE IF NOT EXISTS Teachers (
+                id SERIAL PRIMARY KEY,
+                name VARCHAR(100) NOT NULL,
+                subject VARCHAR(50) NOT NULL
+            );
+        """;
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             Statement stmt = conn.createStatement()) {
+            stmt.execute(createStudentsTable);
+            stmt.execute(createTeachersTable);
+            System.out.println("Database setup completed successfully.");
+        } catch (SQLException e) {
+            System.err.println("Error setting up the database: " + e.getMessage());
+        }
+    }
+}
