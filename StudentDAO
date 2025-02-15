@@ -1,0 +1,46 @@
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Scanner;
+
+public class StudentDAO {
+    public void createStudent(Scanner scanner) {
+        System.out.print("Enter student first name: ");
+        String firstName = scanner.nextLine();
+        System.out.print("Enter student last name: ");
+        String lastName = scanner.nextLine();
+        System.out.print("Enter student email: ");
+        String email = scanner.nextLine();
+        System.out.print("Enter phone number: ");
+        String phoneNumber = scanner.nextLine();
+        System.out.print("Enter date of birth (DD.MM.YYYY): ");
+        String dateOfBirth = scanner.nextLine();
+
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+            java.util.Date utilDate = sdf.parse(dateOfBirth);
+            Date sqlDate = new Date(utilDate.getTime());
+
+            String sql = "INSERT INTO Students (first_name, last_name, email, phone_number, date_of_birth) VALUES (?, ?, ?, ?, ?)";
+
+            try (Connection conn = DatabaseConnection.getConnection();
+                 PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, firstName);
+                stmt.setString(2, lastName);
+                stmt.setString(3, email);
+                stmt.setString(4, phoneNumber);
+                stmt.setDate(5, sqlDate);
+
+                stmt.executeUpdate();
+                System.out.println("Student added successfully.");
+            }
+        } catch (ParseException e) {
+            System.err.println("Invalid date format. Please use DD.MM.YYYY.");
+        } catch (SQLException e) {
+            System.err.println("Error adding student: " + e.getMessage());
+        }
+    }
+}
