@@ -1,0 +1,30 @@
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Scanner;
+
+public class TeacherDAO {
+    public void createTeacher(Scanner scanner) {
+        System.out.print("Enter teacher first name: ");
+        String firstName = scanner.nextLine();
+
+        System.out.print("Enter teacher last name: ");
+        String lastName = scanner.nextLine();
+
+        System.out.print("Enter teacher email: ");
+        String email = scanner.nextLine();
+
+        String sql = "INSERT INTO Teachers (first_name, last_name, email) VALUES (?, ?, ?)";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, firstName);
+            stmt.setString(2, lastName);
+            stmt.setString(3, email);
+            stmt.executeUpdate();
+            System.out.println("Teacher added successfully.");
+        } catch (SQLException e) {
+            System.err.println("Error adding teacher: " + e.getMessage());
+        }
+    }
+}
